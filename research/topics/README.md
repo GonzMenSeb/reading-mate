@@ -13,9 +13,10 @@ The notes deliberately avoid prescribing a stack. They explain what the *problem
 5. `04_synthesis_engines.md` — landscape of TTS engines without picking one.
 6. `05_streaming_and_latency.md` — making it feel real-time.
 7. `06_voice_continuity.md` — same narrator across the whole document.
-8. `07_ux_and_controls.md` — what the user touches.
-9. `08_evaluation.md` — how to know it's actually good.
-10. `09_open_questions.md` — what nobody has solved well yet.
+8. `08_evaluation.md` — how to know it's actually good.
+9. `09_open_questions.md` — what nobody has solved well yet.
+
+> The UI/UX layer is owned outside this repository. These notes intentionally focus on the system: pipeline, prosody, synthesis, evaluation. If you need the UI brief, ask Sebastian; it's maintained alongside the design work.
 
 ## How these notes were assembled
 

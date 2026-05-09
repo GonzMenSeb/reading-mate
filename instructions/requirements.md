@@ -4,6 +4,8 @@ These are *capability* requirements. They describe what the system must be able 
 
 If a requirement here forces a particular tool, treat it as a bug in the requirement, not a hint about the implementation. Push back.
 
+**Scope note.** This document owns *system* requirements — the engine, the pipeline, the synthesis quality, the runtime surface. UI requirements (visual layout, interaction patterns, what the user sees and touches) are owned separately and supplied to you alongside this brief. The system is responsible for *exposing the right capabilities* so any UI can wire to them; what the UI looks like is not specified here.
+
 ## Vision (the thing the requirements have to serve)
 
 Reading-mate reads structured documents aloud in a way that's worth listening to for a long time. It treats the document's structure as linguistic information, not visual decoration. It feels like a presence, not a tool. It works locally, reliably, and without configuration ceremony.
@@ -43,17 +45,17 @@ The system must reliably read documents of at least 30 minutes of synthesized au
 
 Time from "play" to first audible word must be under 500 milliseconds for typical documents on commodity hardware. Re-synthesis of cached content should be near-instant.
 
-### F7. Support live playback controls
+### F7. Expose a programmatic control surface for playback
 
-The user must be able to: pause, resume, jump forward/back by sentence and section, change playback speed (continuous), repeat the last passage, and stop entirely. All controls must respond within 100 ms of the user's action.
+The system must expose, through a stable internal API, the operations: play, pause, resume, stop, jump-by-sentence (both directions), jump-by-section (both directions), continuous speed adjustment, and repeat-last-passage. Any UI layer wiring to these operations must observe a response within 100 ms. Granular indexing (current sentence, current section, time offset) must be queryable in real time.
 
 ### F8. Persist user state across sessions
 
 If the user pauses a document and returns later, position is preserved. Voice profile is preserved. Per-document settings (pronunciation overrides, custom pacing) are preserved.
 
-### F9. Allow pronunciation correction
+### F9. Support pronunciation overrides
 
-The user must be able to fix the pronunciation of any word the system speaks. The fix must apply to all subsequent occurrences of that word in the same document, and optionally globally.
+The system must support per-document and per-user pronunciation overrides for arbitrary tokens. Overrides apply deterministically to every subsequent occurrence within their scope. The override store must be persistable, exportable, and inspectable.
 
 ### F10. Run locally by default
 
@@ -61,11 +63,7 @@ Default operation requires no network. A network mode for higher-quality voices 
 
 ### F11. Degrade gracefully
 
-Component failures (model crash, OOM, malformed input, network outage) must not crash the application. The user is informed in human terms; a fallback path takes over where one exists.
-
-### F12. Provide a "where am I" affordance
-
-The user must always be able to see (or hear, if no display is available) what is being read at this moment, what was read in the last sentence, and what is coming next.
+Component failures (model crash, OOM, malformed input, network outage) must not crash the application. The system must emit a typed, observable failure event with a human-readable description; an automatic fallback path takes over wherever one exists. Silent failure is forbidden.
 
 ## Non-functional requirements
 
@@ -93,27 +91,13 @@ User documents are not transmitted to third parties without explicit per-action 
 
 All bundled models, datasets, and code must be under licenses that permit personal use *and* be documented per-component. If any component is non-OSI-open-source (e.g., research-only weights), it is opt-in and clearly labeled.
 
-## User-experience requirements
+### N7. Voice catalog as a system concept
 
-### U1. No engine knobs by default
+Voices must be addressable by stable, human-meaningful identifiers — not by underlying model names or version strings. The voice catalog (preview audio, attribution, license, capability metadata) is part of the system, queryable through the API; how it's presented is the UI's concern.
 
-The user does not pick "Parler-TTS mini v1" or "Kokoro 82M." They pick a voice with a human-readable name. The technical layer is invisible unless the user opens an "advanced" surface.
+### N8. Empty-input safety
 
-### U2. Voice previewable
-
-Every available voice has a 10-second preview the user can play before committing.
-
-### U3. Listen-while-doing-something-else is the primary mode
-
-The UI must work without continuous user attention. A minimized state is full-featured.
-
-### U4. Content hand-off must be easy from at least one source
-
-There must be a one-action path from "I'm reading this in a browser tab" or "I have a markdown file open" to "reading-mate is reading it." The choice of which source is the primary one is the developer's, but at least one must exist and be friction-free.
-
-### U5. The system never reads silence
-
-If there is nothing to say, the system does not start. If the input is empty, malformed, or unrecognized, the system explains in voice or in clear text — never just silence.
+The system must never produce silent output for non-empty input, and must never start synthesis for empty or malformed input. Both cases emit a typed event for the UI to handle.
 
 ## What's explicitly *not* required (yet)
 
@@ -164,12 +148,12 @@ If the developer believes any of these is *necessary* for the v1 product, they s
 
 ## Acceptance test (informal)
 
-The system passes when Sebastian can:
+The integrated product (system + UI) passes when Sebastian can:
 
-1. Open a markdown file or browser tab containing a long article.
-2. Trigger reading via a single action.
-3. Listen for the entire document without wanting to switch to a competitor.
-4. Pause, fix one mispronounced name, resume — without losing place.
-5. Come back tomorrow and resume from where they stopped.
+1. Hand reading-mate a long markdown document or web article.
+2. Listen end-to-end without wanting to switch to a commercial alternative.
+3. Correct a mispronounced name and have the correction stick for the remainder of the document.
+4. Pause and return — minutes, hours, or days later — and resume from the same place with the same voice and settings.
+5. Trust the system enough to listen ambiently while doing other work.
 
-If any of those five steps feels worse than what the user already gets from current commercial TTS readers, the system isn't done.
+The system's responsibility, specifically, is that *none of those five outcomes is blocked by a system-side limitation*: the capabilities, performance, persistence, and reliability described in the requirements above are present. Whether the experience *feels* right is a joint property of the system and the UI; this document only commits to the system half.

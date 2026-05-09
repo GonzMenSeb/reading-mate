@@ -44,7 +44,7 @@ User study, not engineering, will resolve this. Pick a default; let the user ove
 
 The model doesn't know how to pronounce names of people, places, or domain-specific jargon. It will hallucinate something. The user has to be able to fix it, easily, in-flow.
 
-Per-document and per-user pronunciation dictionaries solve this *if* the UX makes corrections cheap. ([07_ux_and_controls.md](07_ux_and_controls.md) discusses the UX.)
+Per-document and per-user pronunciation dictionaries solve this *if* the system exposes corrections cheaply. The system-side requirement (F9) is that overrides apply deterministically; how cheap they *feel* to make is a UI question handled outside this repo.
 
 ## Multi-language documents
 

@@ -43,10 +43,10 @@ Quick lookup: which papers/articles cover which question. Use to find primary so
 
 - [Trafilatura — ACL 2021](../papers/2021_acl_demo_15_trafilatura.pdf) — main-content extraction. SOTA across benchmarks.
 
-## On product framing / UX
+## On product framing
 
 - [Sesame: Crossing the Uncanny Valley of Voice](../articles/sesame_crossing_uncanny_valley_of_voice.md) — the "voice presence" framing.
-- [NN/g: Voice First](../articles/nngroup_voice_first.md) — voice-output UX rules.
+- [NN/g: Voice First](../articles/nngroup_voice_first.md) — voice-output design principles. UI design itself lives outside this repo, but the underlying observations (voice is ephemeral, position has to be queryable, fail loudly not silently) inform several system-side requirements.
 
 ## On engine choices
 

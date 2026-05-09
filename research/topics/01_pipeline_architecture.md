@@ -75,7 +75,7 @@ The synthesizer's output is streamed to the user, not held in memory until done.
 
 ### Playback
 
-Audio output, with controls. See `07_ux_and_controls.md`. Treat as its own component, even if it's just a wrapper around a system audio API initially. Decoupling it makes "headless mode" (synthesize-to-file) cheap to add.
+Audio output, with controls. Treat as its own component, even if it's just a wrapper around a system audio API initially. Decoupling it makes "headless mode" (synthesize-to-file) cheap to add. The control surface (play/pause/jump/speed/repeat/stop) is exposed as a programmatic API; the UI layer that surfaces those controls is owned outside this repo.
 
 ### Control surface
 
